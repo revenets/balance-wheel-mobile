@@ -1,6 +1,15 @@
+# dependencies
 node_modules/
+
+# Expo
 .expo/
 dist/
+web-build/
+
+# Expo prebuild
+/android/
+/ios/
+
 npm-debug.*
 *.jks
 *.p8
@@ -8,7 +17,6 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
-web-build/
 
 # macOS
 .DS_Store

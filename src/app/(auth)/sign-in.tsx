@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { router } from 'expo-router';
 
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import type { SignInRequestDto } from '@app/types';
 import { selectIsAuthenticated, signIn } from '@app/store/auth/auth-slice';
+
 import { ScreenWrapper } from '@app/components';
 
-export default function SignInScreen() {
+const SignInScreen = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(state => selectIsAuthenticated(state));
 
@@ -27,7 +27,7 @@ export default function SignInScreen() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.navigate('/(tabs)');
+      router.navigate('/(tabs)/home');
     }
   }, [isAuthenticated]);
 
@@ -48,13 +48,15 @@ export default function SignInScreen() {
           secureTextEntry={true}
           onChangeText={text => setUser(prev => ({ ...prev, password: text }))}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-          <Text>Sign In</Text>
-        </TouchableOpacity>
+        <Text style={styles.button} onPress={handleSignIn}>
+          Sign In
+        </Text>
       </View>
     </ScreenWrapper>
   );
-}
+};
+
+export default SignInScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,10 +72,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 5,
   },
-  // eslint-disable-next-line react-native/no-color-literals
   button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
+    marginTop: 20,
   },
 });

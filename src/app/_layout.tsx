@@ -6,21 +6,26 @@ import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
 import { Provider as StoreProvider } from 'react-redux';
+import { StyleSheet } from 'react-native';
 
 import { store } from '@app/store/store';
 
-export default function RootLayout() {
+const RootLayout = () => {
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <StoreProvider store={store}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="(tabs)" />
-          </Stack>
+          <Stack screenOptions={{ headerShown: false }} />
         </StoreProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
-}
+};
+
+export default RootLayout;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

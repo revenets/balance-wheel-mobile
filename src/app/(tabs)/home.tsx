@@ -1,12 +1,14 @@
 import { StyleSheet, View, Text } from 'react-native';
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text>This is a Balance Wheel app</Text>
     </View>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

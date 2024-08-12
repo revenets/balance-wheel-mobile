@@ -12,7 +12,7 @@ const compat = new FlatCompat({
 const tsFiles = ['**/*.ts', '**/*.tsx'];
 module.exports = [
   eslintJs.configs.recommended,
-  ...compat.plugins('@typescript-eslint', 'react-native', 'import'),
+  ...compat.plugins('@typescript-eslint', 'react-native', 'import', '@stylistic'),
   ...compat
     .extends(
       'plugin:@typescript-eslint/recommended-type-checked',
@@ -50,6 +50,7 @@ module.exports = [
           varsIgnorePattern: '^_',
         },
       ],
+      '@stylistic/eol-last': ['error', 'always'],
 
       'import/no-duplicates': ['error', { 'prefer-inline': true }],
       'import/no-default-export': 'error',
@@ -75,6 +76,7 @@ module.exports = [
         { blankLine: 'always', prev: '*', next: 'export' },
         { blankLine: 'any', prev: 'export', next: 'export' },
       ],
+
     },
   },
   {

@@ -1,13 +1,13 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { TabBarIcon } from '@app/components/navigation/tab-bar-icon';
+import { TabBarIcon } from '@app/components';
 
-export default function TabLayout() {
+const TabLayout = () => {
   return (
     <Tabs>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: 'Dashboard',
           tabBarIcon: props => <TabBarIcon name="home" {...props} />,
@@ -15,4 +15,6 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-}
+};
+
+export default TabLayout;
