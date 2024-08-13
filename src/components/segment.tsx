@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Svg, { G, Path } from 'react-native-svg';
+import Svg, { G, Path, Line } from 'react-native-svg';
 import Animated, {
   useSharedValue,
   useAnimatedProps,
@@ -52,9 +52,22 @@ const segments = {
   },
 };
 
+type SegmentKey = keyof typeof segments;
+type NamedMultiplier = Record<SegmentKey, number>;
+
+const namedMultipliers = Object.entries(segments).reduce(
+  (acc: NamedMultiplier, [key, value]) => {
+    acc[key as SegmentKey] = value.value;
+    return acc;
+  },
+  {} as NamedMultiplier
+);
+
 const ACTIVE_SEGMENT_ADJUSTMENT = 20;
 const WHEEL_RADIUS = 150;
 const EXTRA_PADDING = 30;
+const SLIDER_MIN_VALUE = 1;
+const SLIDER_MAX_VALUE = 10;
 
 interface PieSegmentProps {
   startAngle: number;
@@ -85,12 +98,7 @@ const PieSegment: React.FC<PieSegmentProps> = ({
   const animatedColor = useSharedValue(color);
 
   const animatedProps = useAnimatedProps(() => {
-    sharedMultiplier.value = withTiming(multiplier, { duration: 250 });
-    adjustment.value = withSpring(isActive ? ACTIVE_SEGMENT_ADJUSTMENT : 0, {
-      stiffness: 100,
-      damping: 50,
-    });
-    const adjustedRadius = radius * sharedMultiplier.value / 10;
+    const adjustedRadius = (radius * sharedMultiplier.value) / 10;
 
     const moveX = adjustment.value * Math.cos((Math.PI * midAngle) / 180);
     const moveY = adjustment.value * Math.sin((Math.PI * midAngle) / 180);
@@ -139,6 +147,14 @@ const PieSegment: React.FC<PieSegmentProps> = ({
     return { d: wrapperPathData };
   });
 
+  useEffect(() => {
+    sharedMultiplier.value = withTiming(multiplier, { duration: 250 });
+    adjustment.value = withSpring(isActive ? ACTIVE_SEGMENT_ADJUSTMENT : 0, {
+      stiffness: 100,
+      damping: 50,
+    });
+  }, [sharedMultiplier, adjustment, multiplier, isActive]);
+
   return (
     <>
       <AnimatedPath animatedProps={animatedProps} fill={animatedColor.value} />
@@ -152,20 +168,11 @@ const PieSegment: React.FC<PieSegmentProps> = ({
 };
 
 const PieChart: React.FC = () => {
-  const [selectedSegment, setSelectedSegment] = useState<
-    keyof typeof segments | null
-  >(null);
-  const [segmentMultipliers, setSegmentMultipliers] = useState<
-    Record<keyof typeof segments, number>
-  >(
-    Object.entries(segments).reduce(
-      (acc: Record<keyof typeof segments, number>, [key, value]) => {
-        acc[key as keyof typeof segments] = value.value;
-        return acc;
-      },
-      {} as Record<keyof typeof segments, number>
-    )
+  const [selectedSegment, setSelectedSegment] = useState<SegmentKey | null>(
+    null
   );
+  const [segmentMultipliers, setSegmentMultipliers] =
+    useState<NamedMultiplier>(namedMultipliers);
 
   const segmentAngle = 360 / Object.values(segments).length;
 
@@ -195,17 +202,37 @@ const PieChart: React.FC = () => {
               const startAngle = index * segmentAngle;
               const endAngle = (index + 1) * segmentAngle;
 
+              const lineX =
+                WHEEL_RADIUS +
+                (WHEEL_RADIUS + EXTRA_PADDING) *
+                  Math.cos((Math.PI * startAngle) / 180);
+              const lineY =
+                WHEEL_RADIUS +
+                (WHEEL_RADIUS + EXTRA_PADDING) *
+                  Math.sin((Math.PI * startAngle) / 180);
+
               return (
-                <PieSegment
-                  key={key}
-                  startAngle={startAngle}
-                  endAngle={endAngle}
-                  radius={WHEEL_RADIUS}
-                  color={value.color}
-                  onPress={() => handlePress(key as keyof typeof segments)}
-                  multiplier={segmentMultipliers[key as keyof typeof segments]}
-                  isActive={value.isActive}
-                />
+                <React.Fragment key={key}>
+                  <PieSegment
+                    startAngle={startAngle}
+                    endAngle={endAngle}
+                    radius={WHEEL_RADIUS}
+                    color={value.color}
+                    onPress={() => handlePress(key as keyof typeof segments)}
+                    multiplier={
+                      segmentMultipliers[key as keyof typeof segments]
+                    }
+                    isActive={value.isActive}
+                  />
+                  <Line
+                    x1={WHEEL_RADIUS}
+                    y1={WHEEL_RADIUS}
+                    x2={lineX}
+                    y2={lineY}
+                    stroke="#b5b5b5"
+                    strokeWidth="1"
+                  />
+                </React.Fragment>
               );
             })}
           </G>
@@ -214,14 +241,14 @@ const PieChart: React.FC = () => {
       {selectedSegment !== null && (
         <Animated.View>
           <Animated.Text
-            style={{ textAlign: 'center', fontSize: 24, fontWeight: 500 }}
+            style={{ textAlign: 'center', fontSize: 24, fontWeight: '500' }}
           >
-            {(segmentMultipliers[selectedSegment]).toPrecision(2)}
+            {segmentMultipliers[selectedSegment].toPrecision(2)}
           </Animated.Text>
           <Slider
             style={styles.slider}
-            minimumValue={1}
-            maximumValue={10}
+            minimumValue={SLIDER_MIN_VALUE}
+            maximumValue={SLIDER_MAX_VALUE}
             step={0.1}
             tapToSeek
             minimumTrackTintColor={segments[selectedSegment].color}
