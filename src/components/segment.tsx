@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path, Line } from 'react-native-svg';
 import Animated, {
   useSharedValue,
@@ -82,6 +82,7 @@ type NamedMultiplier = Record<SegmentKey, number>;
 const namedMultipliers = Object.entries(segments).reduce(
   (acc: NamedMultiplier, [key, value]) => {
     acc[key as SegmentKey] = value.value;
+
     return acc;
   },
   {} as NamedMultiplier
@@ -286,6 +287,11 @@ const PieChart: React.FC = () => {
                 color={value.color}
                 name={value.icon}
               />
+              {!value.isActive && (
+                <Text style={styles.labelText}>
+                  {segmentMultipliers[key as SegmentKey].toPrecision(2)}
+                </Text>
+              )}
             </TouchableOpacity>
           );
         })}
@@ -293,9 +299,7 @@ const PieChart: React.FC = () => {
       <Animated.View style={styles.sliderBox}>
         {selectedSegment !== null && (
           <>
-            <Animated.Text
-              style={{ textAlign: 'center', fontSize: 24, fontWeight: '500' }}
-            >
+            <Animated.Text style={styles.multiplierValue}>
               {segmentMultipliers[selectedSegment].toPrecision(2)}
             </Animated.Text>
             <Slider
@@ -303,7 +307,7 @@ const PieChart: React.FC = () => {
               minimumValue={SLIDER_MIN_VALUE}
               maximumValue={SLIDER_MAX_VALUE}
               step={0.1}
-              tapToSeek
+              tapToSeek={true}
               minimumTrackTintColor={segments[selectedSegment].color}
               maximumTrackTintColor={'#123456'}
               value={segmentMultipliers[selectedSegment]}
@@ -335,12 +339,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   labelContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     position: 'absolute',
     transform: [{ translateX: ICON_SIZE / 2 }, { translateY: ICON_SIZE / 2 }],
     zIndex: 100,
   },
+  labelText: {
+    fontSize: 12,
+    marginTop: 5,
+  },
   sliderBox: {
     marginTop: 50,
     height: 50,
+  },
+  multiplierValue: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: '500',
   },
 });
