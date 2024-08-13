@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Svg, { G, Path, Line } from 'react-native-svg';
 import Animated, {
   useSharedValue,
@@ -8,51 +8,75 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Slider from '@react-native-community/slider';
+import { Ionicons } from '@expo/vector-icons';
 
-const segments = {
+type Segment = {
+  color: string;
+  isActive: boolean;
+  value: number;
+  icon: keyof typeof Ionicons.glyphMap;
+};
+type SegmentKey =
+  | 'health'
+  | 'career'
+  | 'finance'
+  | 'family'
+  | 'friends'
+  | 'hobbies'
+  | 'personalGrowth'
+  | 'romance';
+
+const segments: Record<SegmentKey, Segment> = {
   health: {
     color: '#FF0000',
     isActive: false,
     value: 10,
+    icon: 'medkit',
   },
   career: {
     color: '#00FF00',
     isActive: false,
     value: 5,
+    icon: 'briefcase',
   },
   finance: {
     color: '#0000FF',
     isActive: false,
     value: 6.5,
+    icon: 'cash',
   },
   family: {
     color: '#FFFF00',
     isActive: false,
     value: 7.5,
+    icon: 'people',
   },
   friends: {
     color: '#FF00FF',
     isActive: false,
     value: 10,
+    icon: 'person',
   },
   hobbies: {
     color: '#00FFFF',
     isActive: false,
     value: 9.3,
+    icon: 'game-controller',
   },
   personalGrowth: {
     color: '#FFA500',
     isActive: false,
     value: 8.4,
+    icon: 'scale',
   },
   romance: {
     color: '#800080',
     isActive: false,
     value: 7.4,
+    icon: 'heart',
   },
 };
 
-type SegmentKey = keyof typeof segments;
 type NamedMultiplier = Record<SegmentKey, number>;
 
 const namedMultipliers = Object.entries(segments).reduce(
@@ -64,10 +88,11 @@ const namedMultipliers = Object.entries(segments).reduce(
 );
 
 const ACTIVE_SEGMENT_ADJUSTMENT = 20;
-const WHEEL_RADIUS = 150;
+const WHEEL_RADIUS = 100;
 const EXTRA_PADDING = 30;
 const SLIDER_MIN_VALUE = 1;
 const SLIDER_MAX_VALUE = 10;
+const ICON_SIZE = 24;
 
 interface PieSegmentProps {
   startAngle: number;
@@ -191,7 +216,7 @@ const PieChart: React.FC = () => {
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <View>
         <Svg
           width={(WHEEL_RADIUS + EXTRA_PADDING) * 2}
@@ -218,12 +243,11 @@ const PieChart: React.FC = () => {
                     endAngle={endAngle}
                     radius={WHEEL_RADIUS}
                     color={value.color}
-                    onPress={() => handlePress(key as keyof typeof segments)}
-                    multiplier={
-                      segmentMultipliers[key as keyof typeof segments]
-                    }
+                    onPress={() => handlePress(key as SegmentKey)}
+                    multiplier={segmentMultipliers[key as SegmentKey]}
                     isActive={value.isActive}
                   />
+
                   <Line
                     x1={WHEEL_RADIUS}
                     y1={WHEEL_RADIUS}
@@ -237,42 +261,86 @@ const PieChart: React.FC = () => {
             })}
           </G>
         </Svg>
+        {Object.entries(segments).map(([key, value], index) => {
+          const startAngle = index * segmentAngle;
+          const endAngle = (index + 1) * segmentAngle;
+          const midAngle = (startAngle + endAngle) / 2;
+          const labelX =
+            WHEEL_RADIUS +
+            (WHEEL_RADIUS + EXTRA_PADDING + ICON_SIZE) *
+              Math.cos((Math.PI * midAngle) / 180);
+          const labelY =
+            WHEEL_RADIUS +
+            (WHEEL_RADIUS + EXTRA_PADDING + ICON_SIZE) *
+              Math.sin((Math.PI * midAngle) / 180);
+
+          return (
+            <TouchableOpacity
+              key={key}
+              hitSlop={20}
+              style={[styles.labelContainer, { top: labelY, left: labelX }]}
+              onPress={() => handlePress(key as SegmentKey)}
+            >
+              <Ionicons
+                size={ICON_SIZE}
+                color={value.color}
+                name={value.icon}
+              />
+            </TouchableOpacity>
+          );
+        })}
       </View>
-      {selectedSegment !== null && (
-        <Animated.View>
-          <Animated.Text
-            style={{ textAlign: 'center', fontSize: 24, fontWeight: '500' }}
-          >
-            {segmentMultipliers[selectedSegment].toPrecision(2)}
-          </Animated.Text>
-          <Slider
-            style={styles.slider}
-            minimumValue={SLIDER_MIN_VALUE}
-            maximumValue={SLIDER_MAX_VALUE}
-            step={0.1}
-            tapToSeek
-            minimumTrackTintColor={segments[selectedSegment].color}
-            maximumTrackTintColor={'#123456'}
-            value={segmentMultipliers[selectedSegment]}
-            onValueChange={value =>
-              setSegmentMultipliers({
-                ...segmentMultipliers,
-                [selectedSegment]: value,
-              })
-            }
-          />
-        </Animated.View>
-      )}
-    </>
+      <Animated.View style={styles.sliderBox}>
+        {selectedSegment !== null && (
+          <>
+            <Animated.Text
+              style={{ textAlign: 'center', fontSize: 24, fontWeight: '500' }}
+            >
+              {segmentMultipliers[selectedSegment].toPrecision(2)}
+            </Animated.Text>
+            <Slider
+              style={styles.slider}
+              minimumValue={SLIDER_MIN_VALUE}
+              maximumValue={SLIDER_MAX_VALUE}
+              step={0.1}
+              tapToSeek
+              minimumTrackTintColor={segments[selectedSegment].color}
+              maximumTrackTintColor={'#123456'}
+              value={segmentMultipliers[selectedSegment]}
+              onValueChange={value =>
+                setSegmentMultipliers({
+                  ...segmentMultipliers,
+                  [selectedSegment]: value,
+                })
+              }
+            />
+          </>
+        )}
+      </Animated.View>
+    </View>
   );
 };
 
 export default PieChart;
 
 const styles = StyleSheet.create({
+  container: {
+    paddingVertical: ICON_SIZE * 2,
+    width: '100%',
+    alignItems: 'center',
+  },
   slider: {
     width: 300,
     opacity: 1,
     marginTop: 10,
+  },
+  labelContainer: {
+    position: 'absolute',
+    transform: [{ translateX: ICON_SIZE / 2 }, { translateY: ICON_SIZE / 2 }],
+    zIndex: 100,
+  },
+  sliderBox: {
+    marginTop: 50,
+    height: 50,
   },
 });
