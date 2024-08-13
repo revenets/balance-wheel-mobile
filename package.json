@@ -16,7 +16,7 @@
     "code:check": "npm run types:check && npm run style:check && npm run lint",
     "clean": "react-native clean",
     "clean:all": "npm run clean -- --include npm,metro,watchman,android,cocoapods",
-    "build:apk": "eas build --profile development --platform android"
+    "build:apk": "eas build --profile preview --platform android"
   },
   "jest": {
     "preset": "jest-expo"
