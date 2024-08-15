@@ -4,19 +4,19 @@ This project is mainly focused on Android platform.
 
 ### Technologies
 
-1. [React Native Expo](https://docs.expo.dev/get-started/set-up-your-environment/) — a mobile library.
-2. [Redux Toolkit](https://redux-toolkit.js.org/) — a state manager.
+1. [React Native Expo](https://docs.expo.dev/get-started/set-up-your-environment/) — mobile library.
+2. [Redux Toolkit](https://redux-toolkit.js.org/) — state manager.
 
 ### Folder Structure
 
-1. assets - static assets (images, fonts);
-2. components - common, reusable UI components;
-3. constants - application-wide constants;
-4. features - main app functionalities;
-5. helpers - utility functions and helper methods;
-6. hooks - custom React hooks;
-7. store - Redux Toolkit state management;
-8. types - common type definitions.
+1. assets — static assets (images, fonts);
+2. components — common, reusable UI components;
+3. constants — application-wide constants;
+4. features — main app functionalities;
+5. helpers — utility functions and helper methods;
+6. hooks — custom React hooks;
+7. store — Redux Toolkit state management;
+8. types — common type definitions.
 
 ### Install dependencies
 
@@ -38,5 +38,5 @@ This project is mainly focused on Android platform.
 
 To learn more about developing your project with Expo, look at the following resources:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Expo documentation](https://docs.expo.dev/): learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
