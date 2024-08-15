@@ -1,6 +1,6 @@
 import { Text } from 'react-native';
 
-import { ScreenWrapper } from '@app/components';
+import { ScreenWrapper } from '@app/components/components';
 
 const SignUpScreen = () => {
   return (

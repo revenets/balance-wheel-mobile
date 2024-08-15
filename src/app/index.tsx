@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 
-import { useAppSelector } from '@app/hooks';
+import { useAppSelector } from '@app/hooks/hooks';
 import { selectIsAuthenticated } from '@app/store/auth/auth-slice';
 
 const Index = () => {

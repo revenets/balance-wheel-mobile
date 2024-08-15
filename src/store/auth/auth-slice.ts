@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { SignInRequestDto, UserDto } from '@app/types';
+import type { SignInRequestDto, UserDto } from '@app/types/types';
 import { createAppAsyncThunk } from '../helpers/create-app-async-thunk';
 import type { RootState } from '../store';
 

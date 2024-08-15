@@ -2,7 +2,7 @@ import { View, StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 import type { Edge } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import { useSafeAreaInsetsStyle } from '@app/hooks';
+import { useSafeAreaInsetsStyle } from '@app/hooks/hooks';
 
 type ScreenWrapperProps = {
   safeAreaEdges?: Edge[];
