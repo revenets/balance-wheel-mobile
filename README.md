@@ -34,6 +34,17 @@ This project is mainly focused on Android platform.
  npm run start
 ```
 
+If you want to run the app locally not using the Expo Go, but building it as a separate application, you'll need to run
+
+```bash
+ npm run prebuild
+```
+and then 
+
+```bash
+ npm run android
+```
+
 ### Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
