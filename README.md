@@ -31,7 +31,7 @@ This project is mainly focused on Android platform.
 ### Start the mobile app
 
 ```bash
- npx expo start
+ npm run start
 ```
 
 ### Learn more
