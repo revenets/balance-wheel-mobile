@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 
-import { useAppDispatch, useAppSelector } from '@app/hooks';
-import type { SignInRequestDto } from '@app/types';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
+import type { SignInRequestDto } from '@app/types/types';
 import { selectIsAuthenticated, signIn } from '@app/store/auth/auth-slice';
 
-import { ScreenWrapper } from '@app/components';
+import { ScreenWrapper } from '@app/components/components';
 
 const SignInScreen = () => {
   const dispatch = useAppDispatch();
