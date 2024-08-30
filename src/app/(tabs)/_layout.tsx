@@ -13,6 +13,14 @@ const TabLayout = () => {
           tabBarIcon: props => <TabBarIcon name="home" {...props} />,
         }}
       />
+      <Tabs.Screen
+        name="wheel-of-life"
+        options={{
+          title: 'Wheel Of Life',
+          tabBarIcon: props => <TabBarIcon name="settings" {...props} />,
+          unmountOnBlur: true,
+        }}
+      />
     </Tabs>
   );
 };
