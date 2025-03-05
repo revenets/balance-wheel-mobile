@@ -1,9 +1,11 @@
+import PieChart from '@app/components/segment';
 import { StyleSheet, View, Text } from 'react-native';
 
 const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text>This is a Balance Wheel app</Text>
+      <PieChart />
     </View>
   );
 };
